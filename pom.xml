@@ -16,10 +16,7 @@
         <module>reggie-web-manage</module>
         <module>reggie-web-app</module>
     </modules>
-<!--同事修改的代码-->
-<!--同事修改的代码-->
-<!--同事修改的代码-->
-<!--同事修改的代码-->
+<!--同事修改的代码嘻嘻-->
 <!--同事修改的代码-->
     <properties>
         <java.version>1.8</java.version>
