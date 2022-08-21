@@ -16,7 +16,7 @@
         <module>reggie-web-manage</module>
         <module>reggie-web-app</module>
     </modules>
-
+<!--控制版本号为1.8-->
     <properties>
         <java.version>1.8</java.version>
     </properties>
