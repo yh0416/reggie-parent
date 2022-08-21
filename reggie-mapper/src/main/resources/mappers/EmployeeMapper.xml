@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.itheima.reggie.mapper.EmployeeMapper">
+    <!--    新增员工-->
+    <!--    todo 内容和表格不一样怎么办呢,忘记了...需要复习-->
+    <insert id="add">
+        insert into employee values (
+        #{id}, #{name},#{username},  #{password},
+        #{phone}, #{sex}, #{idNumber}, #{status},
+        #{createTime},  #{updateTime},  #{createUser},  #{updateUser}
+        )
+    </insert>
+    <!--        //修改员工-->
+    <update id="update">
+        update employee
+        <set>
+            <if test="name != null and name !=''">
+                name=#{name},
+            </if>
+            <if test="username != null and username !=''">
+                username=#{username},
+            </if>
+            <if test="password != null and password !=''">
+                password=#{password},
+            </if>
+            <if test="phone != null and phone !=''">
+                phone=#{phone},
+            </if>
+            <if test="sex != null and sex !=''">
+                sex=#{sex},
+            </if>
+            <if test="idNumber != null and idNumber !=''">
+                id_number=#{idNumber},
+            </if>
+            <if test="status != null">
+                status=#{status},
+            </if>
+            <if test="createTime != null ">
+                create_time=#{createTime},
+            </if>
+            <if test="updateTime != null ">
+                update_time=#{updateTime},
+            </if>
+            <if test="createUser != null ">
+                create_user=#{createUser},
+            </if>
+            <if test="updateUser != null">
+                update_user=#{updateUser}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <select id="findByUsername" resultType="com.itheima.reggie.domain.Employee">
+  select * from employee where username = #{username}
+</select>
+
+    <select id="findByName" resultType="com.itheima.reggie.domain.Employee">
+        select * from employee
+        <where>
+            <if test="name!= null and name !=''">
+                name like concat("%",#{name},"%")
+            </if>
+        </where>
+    </select>
+    <!--      //查询员工(为了修改,根据id查询)-->
+    <select id="findById" resultType="com.itheima.reggie.domain.Employee">
+        select* from employee where id = #{id}
+    </select>
+</mapper>

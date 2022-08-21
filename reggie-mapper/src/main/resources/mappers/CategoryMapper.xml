@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace= "com.itheima.reggie.mapper.CategoryMapper">
+<!--    新增-->
+    <insert id="save">
+        insert into category values (
+        #{id},  #{type},  #{name},  #{sort},
+         #{createTime},  #{updateTime},  #{createUser},
+         #{updateUser}
+        )
+    </insert>
+<!--     //修改分类-->
+    <update id="update">
+        update  category
+        <set>
+            <if test="type !=null ">
+                type =#{type},
+            </if>
+            <if test="name !=null and name !=''">
+                name =#{name},
+            </if>
+            <if test="sort !=null ">
+                sort =#{sort},
+            </if>
+            <if test="createTime !=null ">
+                create_time =#{createTime},
+            </if>
+            <if test="updateTime !=null ">
+                update_time =#{updateTime},
+            </if>
+            <if test="createUser !=null ">
+                create_user =#{createUser},
+            </if>
+            <if test="updateUser !=null">
+                update_user =#{updateUser},
+            </if>
+        </set>
+        where id=#{id}
+    </update>
+
+    <!--员工列表-->
+    <select id="findAll" resultType="com.itheima.reggie.domain.Category">
+        select *from category order by sort asc
+    </select>
+<!--    //mapper查看id下是否有菜 //1-1先在setmeal里面查-->
+    <select id="countSetMealId" resultType="java.lang.Integer">
+        SELECT count(*) from setmeal where category_id=#{id}
+    </select>
+<!--    //1-2在dish表里查-->
+    <select id="countSetDishId" resultType="java.lang.Integer">
+          SELECT count(*) from dish where category_id=#{id}
+    </select>
+    <!--    //都没有的话,就删除-->
+    <delete id="deleteById">
+        delete from category where id=#{id}
+    </delete>
+</mapper>

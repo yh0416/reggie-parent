@@ -1,0 +1,37 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: reggie # 应用名称
+  datasource: # 数据源配置
+    druid:
+      driver-class-name: com.mysql.jdbc.Driver
+      url: jdbc:mysql://localhost:3306/reggie?useUnicode=true&characterEncoding=utf-8&useSSL=false
+      username: root
+      password: root
+  servlet:
+    multipart:
+      max-request-size: 100MB # 最大请求文件大小,默认10MB,1GB=1024MB
+      max-file-size: 10MB # 单个请求文件大小,默认1MB
+#mybatis:
+#  configuration:
+#    map-underscore-to-camel-case: true # 驼峰命名法映射 address_book ---> AddressBook
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl # 日志输出
+#  mapper-locations: classpath:/mappers/**.xml # 指定xml位置
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  mapper-locations: classpath:/mappers/**.xml
+  global-config:
+    db-config:
+      id-type: ASSIGN_ID # id生成策略类型\
+
+#  阿里云oss配置
+reggie:
+  oss:
+    key: LTAI5tJiegyFJgPii3prnZoU
+    secret: LCo03eVRDQZH5CZn6fAVA9GhDDQEZ3
+    endpoint: oss-cn-beijing.aliyuncs.com
+    bucket: reggie-yxt
+    url: https://reggie-yxt.oss-cn-beijing.aliyuncs.com
