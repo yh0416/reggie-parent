@@ -6,6 +6,7 @@ import com.itheima.reggie.domain.Dish;
 import com.itheima.reggie.service.DishService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,6 +15,8 @@ import java.util.List;
 public class DishController {
     @Autowired
     private DishService dishService;
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     //分页查询
     @GetMapping("/dish/page")
@@ -26,12 +29,11 @@ public class DishController {
 
     }
 
-    //新增菜品
-    @PostMapping("/dish")
-    public ResultInfo save(@RequestBody Dish dish) {
-        dishService.save(dish);
-        return ResultInfo.success(null);
-
+    //1-1新增套餐查询--添加套餐中的菜品
+    @GetMapping("/dish/list")
+    public ResultInfo findDishList(Long categoryId, String name) {
+        List<Dish> dishList = dishService.findDishList(categoryId, name);
+        return ResultInfo.success(dishList);
     }
 
     //修改查询回显
@@ -44,9 +46,26 @@ public class DishController {
 
     }
 
+
+//========================================以下是增删改的操作,要做redis缓存=====================================================================================================//
+
+
+    //新增菜品
+    @PostMapping("/dish")
+    public ResultInfo save(@RequestBody Dish dish) {
+        //清除缓存
+        redisTemplate.delete(redisTemplate.keys("dish_*"));
+        dishService.save(dish);
+        return ResultInfo.success(null);
+
+    }
+
+
     //修改
     @PutMapping("/dish")
     public ResultInfo update(@RequestBody Dish dish) {
+        //清除缓存
+        redisTemplate.delete(redisTemplate.keys("dish_*"));
         dishService.update(dish);
         return ResultInfo.success(null);
     }
@@ -54,6 +73,8 @@ public class DishController {
     //删除
     @DeleteMapping("/dish")
     public ResultInfo delete(@RequestParam("ids") List<Long> ids) {
+        //清除缓存
+        redisTemplate.delete(redisTemplate.keys("dish_*"));
         dishService.delete(ids);
         return ResultInfo.success(null);
     }
@@ -62,16 +83,10 @@ public class DishController {
     @PostMapping("/dish/status/{status}")
     public ResultInfo stopSale(@PathVariable("status") Integer status,
                                @RequestParam("ids") List<Long> ids) {
+        //清除缓存
+        redisTemplate.delete(redisTemplate.keys("dish_*"));
         dishService.stopSale(status, ids);
         return ResultInfo.success(null);
-    }
-
-    //1-1新增套餐--添加套餐中的菜品
-    //
-    @GetMapping("/dish/list")
-    public ResultInfo findDishList(Long categoryId,String name) {
-        List<Dish> dishList = dishService.findDishList(categoryId,name);
-        return ResultInfo.success(dishList);
     }
 
 

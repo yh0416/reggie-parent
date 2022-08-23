@@ -5,6 +5,7 @@ import com.itheima.reggie.domain.Dish;
 import com.itheima.reggie.domain.Setmeal;
 import com.itheima.reggie.service.SetmealService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,6 +19,7 @@ public class SetmealController {
 
     //套餐查询
     @GetMapping("/setmeal/list")
+    @Cacheable(value = "setmeal_",key ="#categoryId+'_'+#status" )
     public ResultInfo findSetMeal(Long categoryId, Integer status) {
         List<Setmeal> setmeals = setmealService.findSetMeal(categoryId, status);
         return ResultInfo.success(setmeals);

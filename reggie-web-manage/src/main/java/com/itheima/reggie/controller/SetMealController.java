@@ -6,6 +6,7 @@ import com.itheima.reggie.domain.Setmeal;
 import com.itheima.reggie.service.SetmealService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,7 +28,16 @@ public class SetMealController {
         return ResultInfo.success(page);
     }
 
+    //    1-1修改套餐---回显
+    @GetMapping("/setmeal/{id}")
+    public ResultInfo updateById(@PathVariable("id") Long id) {
+        Setmeal setmeal = setmealService.updateById(id);
+        return ResultInfo.success(setmeal);
+    }
+
+    //==================================增删改的redis操作===============================================
     //1-2新增套餐---新增套餐
+    @CacheEvict(value = "setmeal",allEntries = true)
     @PostMapping("/setmeal")
     public ResultInfo save(@RequestBody Setmeal setmeal) {
 //        Setmeal setmeal1=setmealService.save(setmeal);
@@ -37,6 +47,7 @@ public class SetMealController {
 
     //停售起售
     @PostMapping("/setmeal/status/{status}")
+    @CacheEvict(value = "setmeal",allEntries = true)
     public ResultInfo ChangeStatus(@PathVariable("status") Integer status,
                                    @RequestParam("ids") List<Long> ids) {
         setmealService.ChangeStatus(status, ids);
@@ -45,19 +56,16 @@ public class SetMealController {
 
     //删除套餐
     @DeleteMapping("/setmeal")
+    @CacheEvict(value = "setmeal",allEntries = true)
     public ResultInfo deleteById(@RequestParam("ids") List<Long> ids) {
         setmealService.deleteById(ids);
         return ResultInfo.success(null);
     }
 
-    //    1-1修改套餐---回显
-    @GetMapping("/setmeal/{id}")
-    public ResultInfo updateById(@PathVariable("id") Long id) {
-        Setmeal setmeal = setmealService.updateById(id);
-        return ResultInfo.success(setmeal);
-    }
+
 
     //    1-2修改套餐
+    @CacheEvict(value = "setmeal",allEntries = true)
     @PutMapping("/setmeal")
     public ResultInfo update(@RequestBody Setmeal setmeal) {
         Setmeal setmeal1=setmealService.update(setmeal);
